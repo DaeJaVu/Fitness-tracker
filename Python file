@@ -1,0 +1,60 @@
+import pandas as pd
+import matplotlib.pyplot as plt
+import numpy as np
+
+
+Ax = []; Ay = []; Az = []
+Gx = []; Gy = []; Gz = []
+trash = []
+
+
+with open("C:/Users/Johnson Vu/Documents/Capture/test2.txt", "r") as File1:
+        line = File1.readline()
+        cnt = 1
+        while line != "":
+                if cnt % 2 == 0:
+                        if cnt % 4 != 0:
+                                print("Line {}: {}".format(cnt, line.strip()))
+                                line = File1.readline().strip()
+                                trash.append(File1.read(23).strip())
+                                Gx.append(File1.read(4).strip())
+                                Gy.append(File1.read(6).strip())
+                                Gz.append(File1.read(6).strip())
+                                cnt += 1
+                        else:
+                                print("Line {}: {}".format(cnt, line.strip()))
+                                line = File1.readline()
+                                trash.append(File1.read(23).strip())
+                                Ax.append(File1.read(5).strip())
+                                Ay.append(File1.read(5).strip())
+                                Az.append(File1.read(6).strip())
+                                cnt += 1
+
+                else:
+                        trash.append(File1.read(50).strip())
+                        cnt += 1
+        File1.close()
+
+
+
+
+
+data={'accelX':Ax,'accelY':Ay,'accelZ':Az, 'GyroX':Gx, 'GyroY':Gy, 'GyroZ':Gz}
+frame = pd.DataFrame(data)
+# print(frame)
+
+# create an vector of 12 steps from 0.5~6seconds
+y = np.linspace(0.5,6,12)
+
+gyroXFig=plt.subplots(figsize=(6, 4))
+gyroXFig= plt.plot(y,data['GyroX'])
+plt.title("time vs angular x motion")
+plt.ylabel("gyro of X(units)")
+plt.xlabel("Time(s)")
+
+gyroYFig=plt.subplots(figsize=(6, 4))
+gyroYFig= plt.plot(y,data['GyroY'])
+plt.title("time vs angular y motion")
+plt.ylabel("gyro of Y(units)")
+plt.xlabel("Time(s)")
+plt.show()
